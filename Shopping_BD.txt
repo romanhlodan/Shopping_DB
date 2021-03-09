@@ -1,0 +1,182 @@
+# Створити базу даних яка характкризує користувача інтернет магазина. поля ід, ім'я, прізвище, вік, нікнейм, пошта, баланс аккаунту. занести 20 об'єктів в базу
+# Зробити вибірку : 1. Всі користувачі, 2 всі користувачі з ід більше 10.
+# 3 коричтувачі з ід більше 10 та віком більше 18. 4 коричтувачі з віком більше 20 та балансом меньше 1000,
+# 5. коричтцувачі з балансом в 2000 та віком меньше 40. 6 коричтувачі з ід більше 10 , віком меньше 30, балансом більше 5000
+
+create database shopping
+default character set utf8;
+
+use shopping;
+
+create table buyer(
+    id int auto_increment not null,
+    name varchar(50),
+    surname varchar(50),
+    age int,
+    login varchar(50) not null,
+    e_mail varchar(70) not null,
+    account_balance int default 0,
+    primary key (id)
+);
+
+insert into buyer (name, surname, age, login, e_mail, account_balance) VALUES
+('Roman', 'Hlon',24,'stigman65','hlo@gmail.com',24000),
+('Ivan','Petrov',25,'iven584','wrr@ffr',26000),
+('Abdul','Poipoi',18,'poiabl43','qweerw23@frf',1454),
+('Olga','Hlon',23,'olg343','olfr453@gtf',1500),
+('Roman','Vasulen',24,'vsul666','vrlfl43@fd',850),
+('Alex','Danol',14,'dore4','sdrwd@frf',350),
+('Lesia','Halt',42,'hak433','dswe2@frf',2460),
+('Poipoi','Qwert',38,'qwepoi332','qesde2@ffdx',999),
+('Andri','Polun',21,'poln45','poldee234@kkgl',3600),
+('Vita','Pron',20,'vitpe32','vipl,e43@lgv',584),
+('Ira','Zem',32,'ffdrrt23','deswe44@askl',11000),
+('Akakij','Pedrov',17,'hernt55','asdf234@jhyg',140),
+('Stepan','Ibla',19,'frtf54','fkfdk2l@kgkg',2100),
+('Vovan','Zelen',11,'zelntr33','zeltm55@llg',4000),
+('Hulio','Dejnera',27,'huli3','hukird23@kkkj',666);
+
+select * from buyer;
+
+select * from buyer
+where id > 10;
+
+select * from buyer
+where id > 10 and age > 18;
+
+select * from buyer
+where age > 20 and account_balance < 1000;
+
+select * from buyer
+where account_balance <2000 and age < 40;
+
+select * from buyer
+where id > 7 and age < 25 and account_balance >3000;
+
+# Створити таблицю товарів. Поля: id, назва, ціна наповнити таблицю 20 товарами( ціна від 50 до 1000)
+
+insert into goods(title, price) VALUES
+('Notebook',1000),
+('Tea',35),
+('Hedfons',199),
+('Smartfone',950),
+('Lampa',245),
+('Americano',40),
+('Kent',65),
+('Cups',260),
+('Samohon',70),
+('Glass',450),
+('iPhone',999),
+('Voter',17),
+('Podushka',340),
+('TV',890),
+('Tree',350),
+('Windows',190),
+('Spander',80),
+('PC',780),
+('Blender',600),
+('Coffee',120),
+('Key',380),
+('Oil',520);
+
+# створити таблицю покупок. Поля:id, id_user, id_product наповнити покупками
+
+create table goods(
+                      id int auto_increment not null,
+                      title varchar(70),
+                      price int not null,
+                      primary key (id)
+);
+
+create  table buy (
+    buyer_id int not null ,
+    goods_id int not null,
+    foreign key (buyer_id)
+    references buyer (id),
+    foreign key (goods_id)
+    references goods(id)
+);
+
+insert into buy (buyer_id, goods_id) VALUES
+(1,3),
+(2,9),
+(1,5),
+(6,8),
+(10,11),
+(5,20),
+(3,15),
+(2,21),
+(3,17),
+(6,10),
+(7,22),
+(8,4),
+(8,6),
+(7,2),
+(7,19),
+(6,16),
+(9,13),
+(9,9),
+(10,10),
+(11,7),
+(11,18),
+(12,3),
+(12,9),
+(12,16),
+(13,18),
+(13,4),
+(14,6),
+(14,14),
+(14,2),
+(15,8),
+(15,17),
+(1,8);
+
+# Зробити вибірку:
+# 1. всі юзери зі своїми покупками
+# 2. імя юзера, ціна покупки менша за 200
+# 3. нікнейм юзера, ціна покупки від 200 до 500
+# 4. пошту і назву товару де ціна більша 500
+# 5. назву товару де вік юзера більший за 30
+# 6. імя, пошту і назву товару де ціна більша 750
+# 7. нікнейм юзера і назву товару де ціна меньша за 150 або вік менший за 18
+# 8. нікнейм,пошту де ціна більша за 650 або баланс більший  за 2000
+
+select * from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id;
+
+select buyer.name from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where price < 200;
+
+
+select buyer.login from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where price > 200 and price <500;
+
+select buyer.e_mail, title from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where price >500;
+
+select title from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where age > 30;
+
+select buyer.name, buyer.e_mail, title from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where price > 750;
+
+select buyer.login, title from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where price < 150 or age < 18;
+
+select login, e_mail from buyer
+join buy b on buyer.id = b.buyer_id
+join goods g on b.goods_id = g.id
+where price > 650 or account_balance > 2000;
